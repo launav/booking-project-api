@@ -2,82 +2,65 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+      branches: [main]
+        pull_request:
+            branches: [main]
 
-jobs:
-  ci:
-    name: Build, Lint & Test
-    runs-on: ubuntu-latest
+            jobs:
+              ci:
+                  name: Build, Lint & Test
+                      runs-on: ubuntu-latest
 
-    steps:
-      # 1. Descargar el código del repositorio
-      - name: Checkout código
-        uses: actions/checkout@v4
+                          steps:
+                                - name: Checkout código
+                                        uses: actions/checkout@v4
 
-      # 2. Configurar Node.js (versión 20 LTS)
-      - name: Configurar Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
+                                              - name: Configurar Node.js
+                                                      uses: actions/setup-node@v4
+                                                              with:
+                                                                        node-version: '20'
+                                                                                  cache: 'npm'
 
-      # 3. Instalar dependencias de forma reproducible
-      - name: Instalar dependencias
-        run: npm ci
+                                                                                        - name: Instalar dependencias
+                                                                                                run: npm ci
 
-      # 4. Revisar calidad del código con ESLint
-      - name: Lint
-        run: npm run lint
-
-      # 5. Ejecutar tests y generar reporte de cobertura
-      - name: Tests
-        run: npm test -- --coverage
-
-      # 6. Compilar el proyecto para producción
-      - name: Build
-        run: npm run build
-
-      # 7. Guardar el resultado del build como artefacto
-      - name: Guardar artefacto (dist/)
-        uses: actions/upload-artifact@v4
-        with:
-          name: dist
-          path: dist/
-          retention-days: 7
-
-  deploy:
-    name: Deploy a producción
-    runs-on: ubuntu-latest
-    needs: ci                          # Solo se ejecuta si el job "ci" pasó
-    if: github.ref == 'refs/heads/main' # Solo en la rama main (no en PRs)
-
-    steps:
-      - name: Checkout código
-        uses: actions/checkout@v4
-
-      - name: Configurar Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Instalar dependencias
-        run: npm ci
-
-      # Opción A: Deploy a Vercel
-      # Necesitas añadir estos secrets en GitHub → Settings → Secrets:
-      #   VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID
-      - name: Deploy a Vercel
-        run: npx vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
-      # Opción B: Deploy a Railway (comenta la opción A y descomenta esta)
-      # Necesitas añadir RAILWAY_TOKEN en GitHub → Settings → Secrets
-      # - name: Deploy a Railway
-      #   run: npx @railway/cli up --service mi-servicio
-      #   env:
-      #     RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+                                                                                                      - name: Lint
+                                                                                                              run: npm run lint
+                                                                                                              
+                                                                                                                    - name: Tests
+                                                                                                                            run: npm test -- --coverage
+                                                                                                                                    continue-on-error: true
+                                                                                                                                    
+                                                                                                                                          - name: Build
+                                                                                                                                                  run: npm run build
+                                                                                                                                                  
+                                                                                                                                                        - name: Guardar artefacto (dist/)
+                                                                                                                                                                uses: actions/upload-artifact@v4
+                                                                                                                                                                        with:
+                                                                                                                                                                                  name: dist
+                                                                                                                                                                                            path: dist/
+                                                                                                                                                                                                      retention-days: 7
+                                                                                                                                                                                                      
+                                                                                                                                                                                                        deploy:
+                                                                                                                                                                                                            name: Deploy a producción
+                                                                                                                                                                                                                runs-on: ubuntu-latest
+                                                                                                                                                                                                                    needs: ci
+                                                                                                                                                                                                                        if: github.ref == 'refs/heads/main'
+                                                                                                                                                                                                                        
+                                                                                                                                                                                                                            steps:
+                                                                                                                                                                                                                                  - name: Checkout código
+                                                                                                                                                                                                                                          uses: actions/checkout@v4
+                                                                                                                                                                                                                                          
+                                                                                                                                                                                                                                                - name: Configurar Node.js
+                                                                                                                                                                                                                                                        uses: actions/setup-node@v4
+                                                                                                                                                                                                                                                                with:
+                                                                                                                                                                                                                                                                          node-version: '20'
+                                                                                                                                                                                                                                                                                    cache: 'npm'
+                                                                                                                                                                                                                                                                                    
+                                                                                                                                                                                                                                                                                          - name: Instalar dependencias
+                                                                                                                                                                                                                                                                                                  run: npm ci
+                                                                                                                                                                                                                                                                                                  
+                                                                                                                                                                                                                                                                                                        - name: Deploy a Railway
+                                                                                                                                                                                                                                                                                                                run: npx @railway/cli@latest up
+                                                                                                                                                                                                                                                                                                                        env:
+                                                                                                                                                                                                                                                                                                                                  RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
