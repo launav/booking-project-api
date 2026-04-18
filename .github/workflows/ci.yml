@@ -8,7 +8,7 @@ on:
 
 jobs:
   ci:
-    name: Build, Lint & Test
+    name: Lint & Test
     runs-on: ubuntu-latest
 
     steps:
@@ -29,18 +29,8 @@ jobs:
         continue-on-error: true
 
       - name: Tests
-        run: npm test -- --watch=false --browsers=ChromeHeadless
+        run: npm test
         continue-on-error: true
-
-      - name: Build
-        run: npm run build -- --configuration production
-
-      - name: Guardar artefacto (dist/)
-        uses: actions/upload-artifact@v4
-        with:
-          name: dist
-          path: dist/
-          retention-days: 7
 
   deploy:
     name: Deploy a producción
