@@ -1,0 +1,1000 @@
+{
+  "info": {
+    "_postman_id": "9125c3b7-7fd4-4c48-bae7-a6e1b4720838",
+    "name": "roomify",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "24352906"
+  },
+  "item": [
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Hotel",
+          "item": [
+            {
+              "name": "Usuarios",
+              "item": [
+                {
+                  "name": "get Users",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoxLCJlbWFpbCI6ImFkbWluQHJvb21pZnkuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzc2NTMzNTkwLCJleHAiOjE3NzY2MTk5OTB9.D-LhqHg3HmBkvG8lxaQhBnYOUorbw5W8useK8WeMhLI",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:3000/api/users",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3000",
+                      "path": [
+                        "api",
+                        "users"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "get User",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoxLCJlbWFpbCI6ImFkbWluQHJvb21pZnkuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzc2NTM1NzY5LCJleHAiOjE3NzY2MjIxNjl9.Drkv1uhJfrBUYcqMB7eZrLuq_0sfGlPAGA9ISOjkwME",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:3000/api/users/1",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3000",
+                      "path": [
+                        "api",
+                        "users",
+                        "1"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Delete user",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoxLCJlbWFpbCI6ImFkbWluQHJvb21pZnkuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzc2NTM1NzY5LCJleHAiOjE3NzY2MjIxNjl9.Drkv1uhJfrBUYcqMB7eZrLuq_0sfGlPAGA9ISOjkwME",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3000/api/users/4",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3000",
+                      "path": [
+                        "api",
+                        "users",
+                        "4"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update user",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoxLCJlbWFpbCI6ImFkbWluQHJvb21pZnkuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzc2NTM1NzY5LCJleHAiOjE3NzY2MjIxNjl9.Drkv1uhJfrBUYcqMB7eZrLuq_0sfGlPAGA9ISOjkwME",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"id_user\": 1,\r\n    \"first_name\": \"Admin\",\r\n    \"last_name\": \"Roomify\",\r\n    \"email\": \"admin@roomify.com\",\r\n    \"role\": \"admin\",\r\n    \"phone\": \"600000002\",\r\n    \"address\": \"Calle Admin, 1\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3000/api/users/1",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3000",
+                      "path": [
+                        "api",
+                        "users",
+                        "1"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Reservas",
+              "item": [
+                {
+                  "name": "get Reservas clientes",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoxLCJlbWFpbCI6ImFkbWluQHJvb21pZnkuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzc2NTMzNTkwLCJleHAiOjE3NzY2MTk5OTB9.D-LhqHg3HmBkvG8lxaQhBnYOUorbw5W8useK8WeMhLI",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:3000/api/reservations",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3000",
+                      "path": [
+                        "api",
+                        "reservations"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "status Reservas",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoxLCJlbWFpbCI6ImFkbWluQHJvb21pZnkuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzc2NTMzNTkwLCJleHAiOjE3NzY2MTk5OTB9.D-LhqHg3HmBkvG8lxaQhBnYOUorbw5W8useK8WeMhLI",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PATCH",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"status\": \"confirmed\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3000/api/reservations/1/status",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3000",
+                      "path": [
+                        "api",
+                        "reservations",
+                        "1",
+                        "status"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "get Reserva",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoxLCJlbWFpbCI6ImFkbWluQHJvb21pZnkuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzc2NTM1NzY5LCJleHAiOjE3NzY2MjIxNjl9.Drkv1uhJfrBUYcqMB7eZrLuq_0sfGlPAGA9ISOjkwME",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:3000/api/reservations/1",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3000",
+                      "path": [
+                        "api",
+                        "reservations",
+                        "1"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "get Reservas",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoxLCJlbWFpbCI6ImFkbWluQHJvb21pZnkuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzc2NTM1NzY5LCJleHAiOjE3NzY2MjIxNjl9.Drkv1uhJfrBUYcqMB7eZrLuq_0sfGlPAGA9ISOjkwME",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:3000/api/reservations",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3000",
+                      "path": [
+                        "api",
+                        "reservations"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "get Reserva",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoxLCJlbWFpbCI6ImFkbWluQHJvb21pZnkuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzc2NTM1NzY5LCJleHAiOjE3NzY2MjIxNjl9.Drkv1uhJfrBUYcqMB7eZrLuq_0sfGlPAGA9ISOjkwME",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:3000/api/reservations/1",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3000",
+                      "path": [
+                        "api",
+                        "reservations",
+                        "1"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Heath check",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/health",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "health"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Hoteles",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/hotels/1",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "hotels",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Add hoteles",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoxLCJlbWFpbCI6ImFkbWluQHJvb21pZnkuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzc2NTMxNjUzLCJleHAiOjE3NzY2MTgwNTN9.XWkgpkvi9pXCrPYT5wq5fBDb29qKtujuVJTfAH-69HE",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"Hotel Test\",\r\n  \"address\": \"Calle Mayor, 1\",\r\n  \"city\": \"Sevilla\",\r\n  \"phone\": \"954000000\",\r\n  \"email\": \"test@hotel.com\",\r\n  \"description\": \"Hotel de prueba\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/hotels",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "hotels"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update hoteles",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoxLCJlbWFpbCI6ImFkbWluQHJvb21pZnkuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzc2NTMxNjUzLCJleHAiOjE3NzY2MTgwNTN9.XWkgpkvi9pXCrPYT5wq5fBDb29qKtujuVJTfAH-69HE",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"Hotel Test\",\r\n  \"address\": \"Calle Mayor, 1\",\r\n  \"city\": \"Sevilla\",\r\n  \"phone\": \"954000000\",\r\n  \"email\": \"test@hotel.com\",\r\n  \"description\": \"Hotel de prueba\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/hotels/1",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "hotels",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoxLCJlbWFpbCI6ImFkbWluQHJvb21pZnkuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzc2NTMxNjUzLCJleHAiOjE3NzY2MTgwNTN9.XWkgpkvi9pXCrPYT5wq5fBDb29qKtujuVJTfAH-69HE",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/hotels/1",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "hotels",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Habitaciones",
+          "item": [
+            {
+              "name": "get Habitaciones",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoxLCJlbWFpbCI6ImFkbWluQHJvb21pZnkuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzc2NTMxNjUzLCJleHAiOjE3NzY2MTgwNTN9.XWkgpkvi9pXCrPYT5wq5fBDb29qKtujuVJTfAH-69HE",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/rooms",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "rooms"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "get habitación hotel",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/rooms?hotel_id=1",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "rooms"
+                  ],
+                  "query": [
+                    {
+                      "key": "hotel_id",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "get habitación",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/rooms/1",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "rooms",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Add habitación",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoxLCJlbWFpbCI6ImFkbWluQHJvb21pZnkuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzc2NTMzMTc4LCJleHAiOjE3NzY2MTk1Nzh9.wFG-9yfjQxLGDcYDNJxPo-t4UWCsKIMMkNpli_0s4Cc",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"id_hotel\": 1,\r\n  \"room_number\": \"101\",\r\n  \"type\": \"doble\",\r\n  \"capacity\": 2,\r\n  \"price_per_night\": 95.00,\r\n  \"description\": \"Habitación doble con vistas\",\r\n  \"status\": \"available\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/rooms",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "rooms"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete habitacion",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoxLCJlbWFpbCI6ImFkbWluQHJvb21pZnkuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzc2NTM1NzY5LCJleHAiOjE3NzY2MjIxNjl9.Drkv1uhJfrBUYcqMB7eZrLuq_0sfGlPAGA9ISOjkwME",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/rooms/5",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "rooms",
+                    "5"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update habitación",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoxLCJlbWFpbCI6ImFkbWluQHJvb21pZnkuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzc2NTM1NzY5LCJleHAiOjE3NzY2MjIxNjl9.Drkv1uhJfrBUYcqMB7eZrLuq_0sfGlPAGA9ISOjkwME",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"room_number\": \"101\",\r\n  \"type\": \"suite\",\r\n  \"capacity\": 3,\r\n  \"price_per_night\": 150.00,\r\n  \"description\": \"Habitación actualizada\",\r\n  \"status\": \"available\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/rooms/1",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "rooms",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Imagen",
+          "item": [
+            {
+              "name": "get Imagen hotel",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/images?hotel_id=1",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "images"
+                  ],
+                  "query": [
+                    {
+                      "key": "hotel_id",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "get imagen habitación",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/images?room_id=1",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "images"
+                  ],
+                  "query": [
+                    {
+                      "key": "room_id",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "add imagen",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoxLCJlbWFpbCI6ImFkbWluQHJvb21pZnkuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzc2NTMzNTkwLCJleHAiOjE3NzY2MTk5OTB9.D-LhqHg3HmBkvG8lxaQhBnYOUorbw5W8useK8WeMhLI",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "key",
+                      "value": "image",
+                      "type": "text",
+                      "uuid": "598dba20-c5ed-4ee4-97ac-a2ef33c1ff17"
+                    },
+                    {
+                      "key": "Type",
+                      "value": "File",
+                      "type": "text",
+                      "uuid": "104e40ff-538b-4023-8fc1-d1f660776bc6"
+                    },
+                    {
+                      "key": "Value",
+                      "value": "imagen_prueba",
+                      "type": "text",
+                      "uuid": "0a28b0c3-3264-482b-bcab-a68f7fe31209"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/images/hotel/1",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "images",
+                    "hotel",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "delete imagen",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoxLCJlbWFpbCI6ImFkbWluQHJvb21pZnkuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzc2NTMzNTkwLCJleHAiOjE3NzY2MTk5OTB9.D-LhqHg3HmBkvG8lxaQhBnYOUorbw5W8useK8WeMhLI",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/images/1",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "images",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "get Habitación imagen",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoxLCJlbWFpbCI6ImFkbWluQHJvb21pZnkuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzc2NTM1NzY5LCJleHAiOjE3NzY2MjIxNjl9.Drkv1uhJfrBUYcqMB7eZrLuq_0sfGlPAGA9ISOjkwME",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/images?room_id=1",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "images"
+                  ],
+                  "query": [
+                    {
+                      "key": "room_id",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "TOKEN",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"admin@roomify.com\",\r\n  \"password\": \"Admin1234!\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Cliente",
+      "item": [
+        {
+          "name": "Add cliente",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"first_name\": \"Laura\",\r\n  \"last_name\": \"Navarro\",\r\n  \"email\": \"laura@test.com\",\r\n  \"password\": \"Password123!\",\r\n  \"phone\": \"600000000\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/auth/register",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Post reserva",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoxLCJlbWFpbCI6ImFkbWluQHJvb21pZnkuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzc2NTMzNTkwLCJleHAiOjE3NzY2MTk5OTB9.D-LhqHg3HmBkvG8lxaQhBnYOUorbw5W8useK8WeMhLI",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"id_room\": 1,\r\n  \"id_hotel\": 1,\r\n  \"check_in_date\": \"2025-08-01 14:00:00\",\r\n  \"check_out_date\": \"2025-08-05 12:00:00\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/reservations",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "reservations"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get Reservas",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoxLCJlbWFpbCI6ImFkbWluQHJvb21pZnkuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzc2NTMzNTkwLCJleHAiOjE3NzY2MTk5OTB9.D-LhqHg3HmBkvG8lxaQhBnYOUorbw5W8useK8WeMhLI",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/reservations/my",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "reservations",
+                "my"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
