@@ -1,8 +1,10 @@
 require('dotenv').config();
 
 const express = require('express');
-const cors    = require('cors');
-const path    = require('path');
+const cors = require('cors');
+const path = require('path');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./config/swagger');
 
 const app = express();
 
@@ -16,12 +18,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 // ── Rutas de la API ───────────────────────────────────────────
-app.use('/api/auth',         require('./routes/auth.routes'));
-app.use('/api/hotels',       require('./routes/hotel.routes'));
-app.use('/api/rooms',        require('./routes/room.routes'));
-app.use('/api/images',       require('./routes/image.routes'));
+app.use('/api/auth', require('./routes/auth.routes'));
+app.use('/api/hotels', require('./routes/hotel.routes'));
+app.use('/api/rooms', require('./routes/room.routes'));
+app.use('/api/images', require('./routes/image.routes'));
 app.use('/api/reservations', require('./routes/reservation.routes'));
-app.use('/api/users',        require('./routes/user.routes'));
+app.use('/api/users', require('./routes/user.routes'));
+
+// ── Documentación Swagger ─────────────────────────────────────
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // ── Ruta de comprobación ──────────────────────────────────────
 app.get('/api/health', (req, res) => {
