@@ -1,10 +1,21 @@
 const db = require('../config/db');
 
-// GET /api/hotels
+// GET /api/hotels?page=1&limit=10
 const getAll = async (req, res) => {
+  const page = Math.max(1, parseInt(req.query.page) || 1);
+  const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 10));
+  const offset = (page - 1) * limit;
+
   try {
-    const [rows] = await db.query('SELECT * FROM hotel ORDER BY id_hotel ASC');
-    return res.status(200).json(rows);
+    const [[{ total }]] = await db.query('SELECT COUNT(*) AS total FROM hotel');
+    const [rows] = await db.query(
+      'SELECT * FROM hotel ORDER BY id_hotel ASC LIMIT ? OFFSET ?',
+      [limit, offset]
+    );
+    return res.status(200).json({
+      data: rows,
+      pagination: { total, page, limit, totalPages: Math.ceil(total / limit) },
+    });
   } catch (err) {
     console.error('hotel getAll error:', err);
     return res.status(500).json({ message: 'Error interno del servidor' });

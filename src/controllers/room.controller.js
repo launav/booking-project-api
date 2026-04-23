@@ -1,20 +1,28 @@
 const db = require('../config/db');
 
-// GET /api/rooms  (opcionalmente filtrar por ?hotel_id=1)
+// GET /api/rooms?page=1&limit=10&hotel_id=1
 const getAll = async (req, res) => {
   const { hotel_id } = req.query;
+  const page = Math.max(1, parseInt(req.query.page) || 1);
+  const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 10));
+  const offset = (page - 1) * limit;
+
   try {
-    let query  = 'SELECT * FROM room';
-    let params = [];
+    const whereClause = hotel_id ? 'WHERE id_hotel = ?' : '';
+    const baseParams = hotel_id ? [hotel_id] : [];
 
-    if (hotel_id) {
-      query  += ' WHERE id_hotel = ?';
-      params  = [hotel_id];
-    }
-
-    query += ' ORDER BY id_room ASC';
-    const [rows] = await db.query(query, params);
-    return res.status(200).json(rows);
+    const [[{ total }]] = await db.query(
+      `SELECT COUNT(*) AS total FROM room ${whereClause}`,
+      baseParams
+    );
+    const [rows] = await db.query(
+      `SELECT * FROM room ${whereClause} ORDER BY id_room ASC LIMIT ? OFFSET ?`,
+      [...baseParams, limit, offset]
+    );
+    return res.status(200).json({
+      data: rows,
+      pagination: { total, page, limit, totalPages: Math.ceil(total / limit) },
+    });
   } catch (err) {
     console.error('room getAll error:', err);
     return res.status(500).json({ message: 'Error interno del servidor' });
@@ -49,7 +57,7 @@ const create = async (req, res) => {
       `INSERT INTO room (id_hotel, room_number, type, capacity, price_per_night, description, status)
        VALUES (?, ?, ?, ?, ?, ?, ?)`,
       [id_hotel, room_number, type, capacity, price_per_night,
-       description || null, status || 'available']
+        description || null, status || 'available']
     );
     return res.status(201).json({ message: 'Habitación creada', id_room: result.insertId });
   } catch (err) {

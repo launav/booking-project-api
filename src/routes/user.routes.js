@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const ctrl   = require('../controllers/user.controller');
+const ctrl = require('../controllers/user.controller');
 const { auth, isAdmin } = require('../middlewares/auth');
 
 /**
@@ -13,18 +13,32 @@ const { auth, isAdmin } = require('../middlewares/auth');
  * @swagger
  * /api/users:
  *   get:
- *     summary: Obtener todos los usuarios (solo admin)
+ *     summary: Obtener todos los usuarios (solo admin, paginado)
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema: { type: integer, default: 1 }
+ *         description: Número de página
+ *       - in: query
+ *         name: limit
+ *         schema: { type: integer, default: 10 }
+ *         description: Registros por página (máx 100)
  *     responses:
  *       200:
- *         description: Lista de usuarios
+ *         description: Lista paginada de usuarios
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items: { $ref: '#/components/schemas/User' }
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items: { $ref: '#/components/schemas/User' }
+ *                 pagination:
+ *                   $ref: '#/components/schemas/Pagination'
  *       403:
  *         description: No autorizado
  */

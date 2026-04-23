@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const ctrl   = require('../controllers/reservation.controller');
+const ctrl = require('../controllers/reservation.controller');
 const { auth, isAdmin } = require('../middlewares/auth');
 
 /**
@@ -13,18 +13,32 @@ const { auth, isAdmin } = require('../middlewares/auth');
  * @swagger
  * /api/reservations:
  *   get:
- *     summary: Obtener todas las reservas (solo admin)
+ *     summary: Obtener todas las reservas (solo admin, paginado)
  *     tags: [Reservations]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema: { type: integer, default: 1 }
+ *         description: Número de página
+ *       - in: query
+ *         name: limit
+ *         schema: { type: integer, default: 10 }
+ *         description: Registros por página (máx 100)
  *     responses:
  *       200:
- *         description: Lista de todas las reservas
+ *         description: Lista paginada de reservas
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items: { $ref: '#/components/schemas/Reservation' }
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items: { $ref: '#/components/schemas/Reservation' }
+ *                 pagination:
+ *                   $ref: '#/components/schemas/Pagination'
  *       403:
  *         description: No autorizado
  */

@@ -1,5 +1,5 @@
-const db   = require('../config/db');
-const fs   = require('fs');
+const db = require('../config/db');
+const fs = require('fs');
 const path = require('path');
 
 /**
@@ -21,10 +21,10 @@ const getByEntity = async (req, res) => {
   try {
     let query, params;
     if (hotel_id) {
-      query  = 'SELECT * FROM image WHERE id_hotel = ?';
+      query = 'SELECT * FROM image WHERE id_hotel = ?';
       params = [hotel_id];
     } else {
-      query  = 'SELECT * FROM image WHERE id_room = ?';
+      query = 'SELECT * FROM image WHERE id_room = ?';
       params = [room_id];
     }
 
@@ -52,12 +52,12 @@ const uploadHotelImage = async (req, res) => {
       [hotel_id, url]
     );
     return res.status(201).json({
-      message:  'Imagen subida correctamente',
+      message: 'Imagen subida correctamente',
       id_image: result.insertId,
       url,
     });
   } catch (err) {
-    if (req.file && req.file.path) fs.unlink(req.file.path, () => {});
+    if (req.file && req.file.path) fs.unlink(req.file.path, () => { });
     console.error('image uploadHotelImage error:', err);
     return res.status(500).json({ message: 'Error interno del servidor' });
   }
@@ -79,12 +79,12 @@ const uploadRoomImage = async (req, res) => {
       [room_id, url]
     );
     return res.status(201).json({
-      message:  'Imagen subida correctamente',
+      message: 'Imagen subida correctamente',
       id_image: result.insertId,
       url,
     });
   } catch (err) {
-    if (req.file && req.file.path) fs.unlink(req.file.path, () => {});
+    if (req.file && req.file.path) fs.unlink(req.file.path, () => { });
     console.error('image uploadRoomImage error:', err);
     return res.status(500).json({ message: 'Error interno del servidor' });
   }
