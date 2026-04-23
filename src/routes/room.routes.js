@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const ctrl   = require('../controllers/room.controller');
+const ctrl = require('../controllers/room.controller');
 const { auth, isAdmin } = require('../middlewares/auth');
 
 /**
@@ -13,21 +13,34 @@ const { auth, isAdmin } = require('../middlewares/auth');
  * @swagger
  * /api/rooms:
  *   get:
- *     summary: Obtener todas las habitaciones
+ *     summary: Obtener todas las habitaciones (paginado)
  *     tags: [Rooms]
  *     parameters:
  *       - in: query
  *         name: hotel_id
  *         schema: { type: integer }
  *         description: Filtrar habitaciones por hotel
+ *       - in: query
+ *         name: page
+ *         schema: { type: integer, default: 1 }
+ *         description: Número de página
+ *       - in: query
+ *         name: limit
+ *         schema: { type: integer, default: 10 }
+ *         description: Registros por página (máx 100)
  *     responses:
  *       200:
- *         description: Lista de habitaciones
+ *         description: Lista paginada de habitaciones
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items: { $ref: '#/components/schemas/Room' }
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items: { $ref: '#/components/schemas/Room' }
+ *                 pagination:
+ *                   $ref: '#/components/schemas/Pagination'
  */
 router.get('/', ctrl.getAll);
 

@@ -1,9 +1,13 @@
 const db = require('../config/db');
 
-// GET /api/reservations         [admin]  → todas las reservas
-// GET /api/reservations/my      [client] → reservas del usuario autenticado
+// GET /api/reservations?page=1&limit=10  [admin]
 const getAll = async (req, res) => {
+  const page = Math.max(1, parseInt(req.query.page) || 1);
+  const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 10));
+  const offset = (page - 1) * limit;
+
   try {
+    const [[{ total }]] = await db.query('SELECT COUNT(*) AS total FROM reservation');
     const [rows] = await db.query(
       `SELECT r.*, u.first_name, u.last_name, u.email,
               ro.room_number, ro.type, h.name AS hotel_name
@@ -11,9 +15,14 @@ const getAll = async (req, res) => {
        JOIN user u    ON r.id_user  = u.id_user
        JOIN room ro   ON r.id_room  = ro.id_room
        JOIN hotel h   ON r.id_hotel = h.id_hotel
-       ORDER BY r.created_at DESC`
+       ORDER BY r.created_at DESC
+       LIMIT ? OFFSET ?`,
+      [limit, offset]
     );
-    return res.status(200).json(rows);
+    return res.status(200).json({
+      data: rows,
+      pagination: { total, page, limit, totalPages: Math.ceil(total / limit) },
+    });
   } catch (err) {
     console.error('reservation getAll error:', err);
     return res.status(500).json({ message: 'Error interno del servidor' });
@@ -107,7 +116,7 @@ const create = async (req, res) => {
     );
 
     return res.status(201).json({
-      message:        'Reserva creada',
+      message: 'Reserva creada',
       id_reservation: result.insertId,
     });
   } catch (err) {
@@ -118,7 +127,7 @@ const create = async (req, res) => {
 
 // PATCH /api/reservations/:id/status  [admin]
 const updateStatus = async (req, res) => {
-  const { id }     = req.params;
+  const { id } = req.params;
   const { status } = req.body;
   const validStatuses = ['pending', 'confirmed', 'cancelled'];
 

@@ -1,13 +1,22 @@
 const bcrypt = require('bcrypt');
-const db     = require('../config/db');
+const db = require('../config/db');
 
-// GET /api/users  [admin]
+// GET /api/users?page=1&limit=10  [admin]
 const getAll = async (req, res) => {
+  const page = Math.max(1, parseInt(req.query.page) || 1);
+  const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 10));
+  const offset = (page - 1) * limit;
+
   try {
+    const [[{ total }]] = await db.query('SELECT COUNT(*) AS total FROM user');
     const [rows] = await db.query(
-      'SELECT id_user, first_name, last_name, email, role, phone, address FROM user ORDER BY id_user ASC'
+      'SELECT id_user, first_name, last_name, email, role, phone, address FROM user ORDER BY id_user ASC LIMIT ? OFFSET ?',
+      [limit, offset]
     );
-    return res.status(200).json(rows);
+    return res.status(200).json({
+      data: rows,
+      pagination: { total, page, limit, totalPages: Math.ceil(total / limit) },
+    });
   } catch (err) {
     console.error('user getAll error:', err);
     return res.status(500).json({ message: 'Error interno del servidor' });

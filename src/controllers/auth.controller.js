@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
-const jwt    = require('jsonwebtoken');
-const db     = require('../config/db');
+const jwt = require('jsonwebtoken');
+const db = require('../config/db');
 
 // POST /api/auth/register
 const register = async (req, res) => {
@@ -63,11 +63,11 @@ const login = async (req, res) => {
     return res.status(200).json({
       token,
       user: {
-        id_user:    user.id_user,
+        id_user: user.id_user,
         first_name: user.first_name,
-        last_name:  user.last_name,
-        email:      user.email,
-        role:       user.role,
+        last_name: user.last_name,
+        email: user.email,
+        role: user.role,
       },
     });
   } catch (err) {

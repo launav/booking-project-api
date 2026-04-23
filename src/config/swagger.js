@@ -75,6 +75,15 @@ const options = {
                         image_path: { type: 'string', example: 'uploads/hoteles/hotel_1234_foto.jpg' },
                     },
                 },
+                Pagination: {
+                    type: 'object',
+                    properties: {
+                        total: { type: 'integer', example: 45 },
+                        page: { type: 'integer', example: 1 },
+                        limit: { type: 'integer', example: 10 },
+                        totalPages: { type: 'integer', example: 5 },
+                    },
+                },
                 Error: {
                     type: 'object',
                     properties: {

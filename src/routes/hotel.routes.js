@@ -13,16 +13,30 @@ const { auth, isAdmin } = require('../middlewares/auth');
  * @swagger
  * /api/hotels:
  *   get:
- *     summary: Obtener todos los hoteles
+ *     summary: Obtener todos los hoteles (paginado)
  *     tags: [Hotels]
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema: { type: integer, default: 1 }
+ *         description: Número de página
+ *       - in: query
+ *         name: limit
+ *         schema: { type: integer, default: 10 }
+ *         description: Registros por página (máx 100)
  *     responses:
  *       200:
- *         description: Lista de hoteles
+ *         description: Lista paginada de hoteles
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items: { $ref: '#/components/schemas/Hotel' }
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items: { $ref: '#/components/schemas/Hotel' }
+ *                 pagination:
+ *                   $ref: '#/components/schemas/Pagination'
  */
 router.get('/', ctrl.getAll);
 
