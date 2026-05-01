@@ -3,12 +3,16 @@ const jwt = require('jsonwebtoken');
 const db = require('../config/db');
 
 // POST /api/auth/register
+const VALID_ROLES = ['client', 'admin'];
+
 const register = async (req, res) => {
-  const { first_name, last_name, email, password, phone, address } = req.body;
+  const { first_name, last_name, email, password, phone, address, role } = req.body;
 
   if (!first_name || !last_name || !email || !password) {
     return res.status(400).json({ message: 'Faltan campos obligatorios' });
   }
+
+  const assignedRole = VALID_ROLES.includes(role) ? role : 'client';
 
   try {
     const [existing] = await db.query('SELECT id_user FROM user WHERE email = ?', [email]);
@@ -20,13 +24,14 @@ const register = async (req, res) => {
 
     const [result] = await db.query(
       `INSERT INTO user (first_name, last_name, email, password, role, phone, address)
-       VALUES (?, ?, ?, ?, 'client', ?, ?)`,
-      [first_name, last_name, email, hash, phone || null, address || null]
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [first_name, last_name, email, hash, assignedRole, phone || null, address || null]
     );
 
     return res.status(201).json({
       message: 'Usuario registrado correctamente',
       id_user: result.insertId,
+      role: assignedRole,
     });
   } catch (err) {
     console.error('register error:', err);
