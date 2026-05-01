@@ -68,6 +68,9 @@ router.get('/', ctrl.getByEntity);
  *       403:
  *         description: No autorizado
  */
+// Guardar URL externa (debe ir antes de /:id para que Express no confunda 'url' con un id)
+router.post('/url', auth, isAdmin, ctrl.saveUrl);
+
 router.post('/hotel/:hotel_id', auth, isAdmin, upload.single('image'), ctrl.uploadHotelImage);
 
 /**

@@ -90,6 +90,29 @@ const uploadRoomImage = async (req, res) => {
   }
 };
 
+// POST /api/images/url  [admin] — guarda una URL externa directamente
+const saveUrl = async (req, res) => {
+  const { id_room, id_hotel, url } = req.body;
+
+  if (!url || !url.trim()) {
+    return res.status(400).json({ message: 'La URL es obligatoria' });
+  }
+  if (!id_room && !id_hotel) {
+    return res.status(400).json({ message: 'Indica id_room o id_hotel' });
+  }
+
+  try {
+    const [result] = await db.query(
+      'INSERT INTO image (id_hotel, id_room, url) VALUES (?, ?, ?)',
+      [id_hotel ?? null, id_room ?? null, url.trim()]
+    );
+    return res.status(201).json({ message: 'Imagen guardada', id_image: result.insertId, url });
+  } catch (err) {
+    console.error('image saveUrl error:', err);
+    return res.status(500).json({ message: 'Error interno del servidor' });
+  }
+};
+
 // DELETE /api/images/:id  [admin]
 const remove = async (req, res) => {
   const { id } = req.params;
@@ -117,4 +140,4 @@ const remove = async (req, res) => {
   }
 };
 
-module.exports = { getByEntity, uploadHotelImage, uploadRoomImage, remove };
+module.exports = { getByEntity, uploadHotelImage, uploadRoomImage, saveUrl, remove };
