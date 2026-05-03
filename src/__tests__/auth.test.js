@@ -1,25 +1,25 @@
-process.env.JWT_SECRET      = 'test-secret';
-process.env.JWT_EXPIRES_IN  = '1h';
+process.env.JWT_SECRET = 'test-secret';
+process.env.JWT_EXPIRES_IN = '1h';
 
 jest.mock('../config/db', () => ({ query: jest.fn() }));
-const db      = require('../config/db');
+const db = require('../config/db');
 const request = require('supertest');
-const app     = require('../app');
-const bcrypt  = require('bcrypt');
+const app = require('../app');
+const bcrypt = require('bcrypt');
 
 describe('POST /api/auth/register', () => {
   beforeEach(() => jest.clearAllMocks());
 
   test('201 - registro correcto', async () => {
     db.query
-      .mockResolvedValueOnce([[]])                         // email no existe
-      .mockResolvedValueOnce([{ insertId: 1 }]);           // insert ok
+      .mockResolvedValueOnce([[]]) // email no existe
+      .mockResolvedValueOnce([{ insertId: 1 }]); // insert ok
 
     const res = await request(app).post('/api/auth/register').send({
       first_name: 'Laura',
-      last_name:  'García',
-      email:      'laura@test.com',
-      password:   'password123',
+      last_name: 'García',
+      email: 'laura@test.com',
+      password: 'password123',
     });
 
     expect(res.statusCode).toBe(201);
@@ -34,13 +34,13 @@ describe('POST /api/auth/register', () => {
   });
 
   test('409 - email ya registrado', async () => {
-    db.query.mockResolvedValueOnce([[{ id_user: 1 }]]);    // email ya existe
+    db.query.mockResolvedValueOnce([[{ id_user: 1 }]]); // email ya existe
 
     const res = await request(app).post('/api/auth/register').send({
       first_name: 'Laura',
-      last_name:  'García',
-      email:      'laura@test.com',
-      password:   'password123',
+      last_name: 'García',
+      email: 'laura@test.com',
+      password: 'password123',
     });
     expect(res.statusCode).toBe(409);
   });
@@ -57,7 +57,7 @@ describe('POST /api/auth/login', () => {
     }]]);
 
     const res = await request(app).post('/api/auth/login').send({
-      email:    'laura@test.com',
+      email: 'laura@test.com',
       password: 'password123',
     });
 
