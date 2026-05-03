@@ -46,6 +46,39 @@ router.get('/', ctrl.getAll);
 
 /**
  * @swagger
+ * /api/rooms/{id}/availability:
+ *   get:
+ *     summary: Comprobar disponibilidad de una habitación
+ *     tags: [Rooms]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: integer }
+ *       - in: query
+ *         name: checkIn
+ *         required: true
+ *         schema: { type: string, format: date }
+ *       - in: query
+ *         name: checkOut
+ *         required: true
+ *         schema: { type: string, format: date }
+ *     responses:
+ *       200:
+ *         description: Resultado de disponibilidad
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 available: { type: boolean }
+ *       400:
+ *         description: Faltan parámetros checkIn o checkOut
+ */
+router.get('/:id/availability', ctrl.checkAvailability);
+
+/**
+ * @swagger
  * /api/rooms/{id}:
  *   get:
  *     summary: Obtener una habitación por ID
