@@ -102,4 +102,29 @@ const remove = async (req, res) => {
   }
 };
 
-module.exports = { getAll, getById, create, update, remove };
+// GET /api/rooms/:id/availability?checkIn=YYYY-MM-DD&checkOut=YYYY-MM-DD  [public]
+const checkAvailability = async (req, res) => {
+  const { id } = req.params;
+  const { checkIn, checkOut } = req.query;
+
+  if (!checkIn || !checkOut) {
+    return res.status(400).json({ message: 'Se requieren checkIn y checkOut' });
+  }
+
+  try {
+    const [conflicts] = await db.query(
+      `SELECT id_reservation FROM reservation
+       WHERE id_room = ?
+         AND reservation_status != 'cancelled'
+         AND check_in_date  < ?
+         AND check_out_date > ?`,
+      [id, checkOut, checkIn]
+    );
+    return res.status(200).json({ available: conflicts.length === 0 });
+  } catch (err) {
+    console.error('checkAvailability error:', err);
+    return res.status(500).json({ message: 'Error interno del servidor' });
+  }
+};
+
+module.exports = { getAll, getById, create, update, remove, checkAvailability };

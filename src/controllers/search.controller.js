@@ -41,7 +41,9 @@ const searchRooms = async (req, res) => {
       conditions.push(`
         r.id_room NOT IN (
           SELECT res.id_room FROM reservation res
-          WHERE res.check_out_date > ? AND res.check_in_date < ?
+          WHERE res.check_out_date > ?
+            AND res.check_in_date < ?
+            AND res.reservation_status != 'cancelled'
         )
       `);
       params.push(checkIn, checkOut);
