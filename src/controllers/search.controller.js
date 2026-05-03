@@ -1,7 +1,6 @@
 const db = require('../config/db');
 
 /**
- * Búsqueda de habitaciones con filtros
  * GET /api/rooms/search?city=&checkIn=&checkOut=&capacity=&page=1&limit=10
  */
 const searchRooms = async (req, res) => {
@@ -12,9 +11,7 @@ const searchRooms = async (req, res) => {
   const offset = (pageNum - 1) * limitNum;
 
   try {
-    // Construir consulta dinámica
     let sql = `
-      SELECT r.*, h.name as hotel_name, h.address as hotel_address, h.city as hotel_city
       FROM room r
       JOIN hotel h ON r.id_hotel = h.id_hotel
     `;
@@ -22,52 +19,73 @@ const searchRooms = async (req, res) => {
     const params = [];
     const conditions = [];
 
-    // Filtrar por ciudad del hotel
+    // ciudad
     if (city) {
-      conditions.push('LOWER(h.city) LIKE LOWER(?)');
       params.push(`%${city}%`);
+      conditions.push(`LOWER(h.city) LIKE LOWER($${params.length})`);
     }
 
-    // Filtrar por capacidad mínima
+    // capacidad
     if (capacity) {
-      conditions.push('r.capacity >= ?');
       params.push(parseInt(capacity));
+      conditions.push(`r.capacity >= $${params.length}`);
     }
 
-    // Filtrar por disponibilidad de fechas (habitaciones no reservadas en esas fechas)
-    // Una habitación no está disponible si hay una reserva que se solapa con el rango de búsqueda
-    // Solapamiento: reserva.checkOut > checkIn AND reserva.checkIn < checkOut
+    // disponibilidad (no solapamiento)
     if (checkIn && checkOut) {
+      params.push(checkIn, checkOut);
+      const p1 = params.length - 1; // checkIn
+      const p2 = params.length;     // checkOut
+
       conditions.push(`
         r.id_room NOT IN (
           SELECT res.id_room FROM reservation res
-          WHERE res.check_out_date > ?
-            AND res.check_in_date < ?
+          WHERE res.check_out_date > $${p1}
+            AND res.check_in_date < $${p2}
             AND res.reservation_status != 'cancelled'
         )
       `);
-      params.push(checkIn, checkOut);
     }
 
-    // Solo habitaciones disponibles
-    conditions.push("r.status = 'available'");
+    // estado
+    conditions.push(`r.status = 'available'`);
 
     if (conditions.length > 0) {
       sql += ' WHERE ' + conditions.join(' AND ');
     }
 
-    // Contar total
-    const countSql = sql.replace('SELECT r.*, h.name as hotel_name, h.address as hotel_address, h.city as hotel_city', 'SELECT COUNT(*) as total');
-    const [[{ total }]] = await db.query(countSql, params);
+    // total
+    const countQuery = `SELECT COUNT(*)::int AS total ${sql}`;
+    const countResult = await db.query(countQuery, params);
+    const total = countResult.rows[0].total;
 
-    // Obtener resultados paginados
-    sql += ' ORDER BY r.price_per_night ASC LIMIT ? OFFSET ?';
-    const [rows] = await db.query(sql, [...params, limitNum, offset]);
+    // datos
+    const dataQuery = `
+      SELECT r.*, 
+             h.name AS hotel_name, 
+             h.address AS hotel_address, 
+             h.city AS hotel_city
+      ${sql}
+      ORDER BY r.price_per_night ASC
+      LIMIT $${params.length + 1}
+      OFFSET $${params.length + 2}
+    `;
+
+    const dataResult = await db.query(
+      dataQuery,
+      [...params, limitNum, offset]
+    );
 
     return res.status(200).json({
-      data: rows,
-      pagination: { total, page: pageNum, limit: limitNum, totalPages: Math.ceil(total / limitNum) },
+      data: dataResult.rows,
+      pagination: {
+        total,
+        page: pageNum,
+        limit: limitNum,
+        totalPages: Math.ceil(total / limitNum),
+      },
     });
+
   } catch (err) {
     console.error('searchRooms error:', err);
     return res.status(500).json({ message: 'Error interno del servidor' });

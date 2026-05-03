@@ -7,15 +7,19 @@ const getAll = async (req, res) => {
   const offset = (page - 1) * limit;
 
   try {
-    const [[{ total }]] = await db.query('SELECT COUNT(*) AS total FROM hotel');
-    const [rows] = await db.query(
-      'SELECT * FROM hotel ORDER BY id_hotel ASC LIMIT ? OFFSET ?',
+    const countResult = await db.query('SELECT COUNT(*)::int AS total FROM hotel');
+    const total = countResult.rows[0].total;
+
+    const result = await db.query(
+      'SELECT * FROM hotel ORDER BY id_hotel ASC LIMIT $1 OFFSET $2',
       [limit, offset]
     );
+
     return res.status(200).json({
-      data: rows,
+      data: result.rows,
       pagination: { total, page, limit, totalPages: Math.ceil(total / limit) },
     });
+
   } catch (err) {
     console.error('hotel getAll error:', err);
     return res.status(500).json({ message: 'Error interno del servidor' });
@@ -25,19 +29,26 @@ const getAll = async (req, res) => {
 // GET /api/hotels/:id
 const getById = async (req, res) => {
   const { id } = req.params;
+
   try {
-    const [rows] = await db.query('SELECT * FROM hotel WHERE id_hotel = ?', [id]);
-    if (rows.length === 0) {
+    const result = await db.query(
+      'SELECT * FROM hotel WHERE id_hotel = $1',
+      [id]
+    );
+
+    if (result.rows.length === 0) {
       return res.status(404).json({ message: 'Hotel no encontrado' });
     }
-    return res.status(200).json(rows[0]);
+
+    return res.status(200).json(result.rows[0]);
+
   } catch (err) {
     console.error('hotel getById error:', err);
     return res.status(500).json({ message: 'Error interno del servidor' });
   }
 };
 
-// POST /api/hotels  [admin]
+// POST /api/hotels
 const create = async (req, res) => {
   const { name, address, city, phone, email, description } = req.body;
 
@@ -46,54 +57,73 @@ const create = async (req, res) => {
   }
 
   try {
-    const [result] = await db.query(
+    const result = await db.query(
       `INSERT INTO hotel (name, address, city, phone, email, description)
-       VALUES (?, ?, ?, ?, ?, ?)`,
+       VALUES ($1, $2, $3, $4, $5, $6)
+       RETURNING id_hotel`,
       [name, address, city, phone || null, email || null, description || null]
     );
-    return res.status(201).json({ message: 'Hotel creado', id_hotel: result.insertId });
+
+    return res.status(201).json({
+      message: 'Hotel creado',
+      id_hotel: result.rows[0].id_hotel
+    });
+
   } catch (err) {
     console.error('hotel create error:', err);
     return res.status(500).json({ message: 'Error interno del servidor' });
   }
 };
 
-// PUT /api/hotels/:id  [admin]
+// PUT /api/hotels/:id
 const update = async (req, res) => {
   const { id } = req.params;
   const { name, address, city, phone, email, description } = req.body;
 
   try {
-    const [result] = await db.query(
-      `UPDATE hotel SET name = ?, address = ?, city = ?, phone = ?, email = ?, description = ?
-       WHERE id_hotel = ?`,
+    const result = await db.query(
+      `UPDATE hotel 
+       SET name = $1, address = $2, city = $3, phone = $4, email = $5, description = $6
+       WHERE id_hotel = $7`,
       [name, address, city, phone || null, email || null, description || null, id]
     );
-    if (result.affectedRows === 0) {
+
+    if (result.rowCount === 0) {
       return res.status(404).json({ message: 'Hotel no encontrado' });
     }
-    return res.status(200).json({ message: 'Hotel actualizado' });
+
+    return res.status(200).json({ message: 'Hotel actualizado', id_hotel: Number(id) });
+
   } catch (err) {
     console.error('hotel update error:', err);
     return res.status(500).json({ message: 'Error interno del servidor' });
   }
 };
 
-// DELETE /api/hotels/:id  [admin]
+// DELETE /api/hotels/:id
 const remove = async (req, res) => {
   const { id } = req.params;
+
   try {
-    const [result] = await db.query('DELETE FROM hotel WHERE id_hotel = ?', [id]);
-    if (result.affectedRows === 0) {
+    const result = await db.query(
+      'DELETE FROM hotel WHERE id_hotel = $1',
+      [id]
+    );
+
+    if (result.rowCount === 0) {
       return res.status(404).json({ message: 'Hotel no encontrado' });
     }
+
     return res.status(200).json({ message: 'Hotel eliminado' });
+
   } catch (err) {
-    if (err.code === 'ER_ROW_IS_REFERENCED_2') {
+    // PostgreSQL foreign key error
+    if (err.code === '23503') {
       return res.status(409).json({
         message: 'No se puede eliminar el hotel porque tiene reservas asociadas'
       });
     }
+
     console.error('hotel remove error:', err);
     return res.status(500).json({ message: 'Error interno del servidor' });
   }

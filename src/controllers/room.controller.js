@@ -8,21 +8,30 @@ const getAll = async (req, res) => {
   const offset = (page - 1) * limit;
 
   try {
-    const whereClause = hotel_id ? 'WHERE id_hotel = ?' : '';
-    const baseParams = hotel_id ? [hotel_id] : [];
+    let whereClause = '';
+    let params = [];
 
-    const [[{ total }]] = await db.query(
-      `SELECT COUNT(*) AS total FROM room ${whereClause}`,
-      baseParams
+    if (hotel_id) {
+      whereClause = 'WHERE id_hotel = $1';
+      params.push(hotel_id);
+    }
+
+    const countResult = await db.query(
+      `SELECT COUNT(*)::int AS total FROM room ${whereClause}`,
+      params
     );
-    const [rows] = await db.query(
-      `SELECT * FROM room ${whereClause} ORDER BY id_room ASC LIMIT ? OFFSET ?`,
-      [...baseParams, limit, offset]
+    const total = countResult.rows[0].total;
+
+    const result = await db.query(
+      `SELECT * FROM room ${whereClause} ORDER BY id_room ASC LIMIT $${params.length + 1} OFFSET $${params.length + 2}`,
+      [...params, limit, offset]
     );
+
     return res.status(200).json({
-      data: rows,
+      data: result.rows,
       pagination: { total, page, limit, totalPages: Math.ceil(total / limit) },
     });
+
   } catch (err) {
     console.error('room getAll error:', err);
     return res.status(500).json({ message: 'Error interno del servidor' });
@@ -32,19 +41,26 @@ const getAll = async (req, res) => {
 // GET /api/rooms/:id
 const getById = async (req, res) => {
   const { id } = req.params;
+
   try {
-    const [rows] = await db.query('SELECT * FROM room WHERE id_room = ?', [id]);
-    if (rows.length === 0) {
+    const result = await db.query(
+      'SELECT * FROM room WHERE id_room = $1',
+      [id]
+    );
+
+    if (result.rows.length === 0) {
       return res.status(404).json({ message: 'Habitación no encontrada' });
     }
-    return res.status(200).json(rows[0]);
+
+    return res.status(200).json(result.rows[0]);
+
   } catch (err) {
     console.error('room getById error:', err);
     return res.status(500).json({ message: 'Error interno del servidor' });
   }
 };
 
-// POST /api/rooms  [admin]
+// POST /api/rooms
 const create = async (req, res) => {
   const { id_hotel, room_number, type, capacity, price_per_night, description, status } = req.body;
 
@@ -53,56 +69,81 @@ const create = async (req, res) => {
   }
 
   try {
-    const [result] = await db.query(
+    const result = await db.query(
       `INSERT INTO room (id_hotel, room_number, type, capacity, price_per_night, description, status)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [id_hotel, room_number, type, capacity, price_per_night,
-        description || null, status || 'available']
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
+       RETURNING id_room`,
+      [
+        parseInt(id_hotel),
+        room_number,
+        type,
+        parseInt(capacity),
+        parseFloat(price_per_night),
+        description || null,
+        status || 'available'
+      ]
     );
-    return res.status(201).json({ message: 'Habitación creada', id_room: result.insertId });
+
+    return res.status(201).json({
+      message: 'Habitación creada',
+      id_room: result.rows[0].id_room
+    });
+
   } catch (err) {
     console.error('room create error:', err);
     return res.status(500).json({ message: 'Error interno del servidor' });
   }
 };
 
-// PUT /api/rooms/:id  [admin]
+// PUT /api/rooms/:id
 const update = async (req, res) => {
   const { id } = req.params;
   const { room_number, type, capacity, price_per_night, description, status } = req.body;
 
   try {
-    const [result] = await db.query(
-      `UPDATE room SET room_number = ?, type = ?, capacity = ?, price_per_night = ?,
-       description = ?, status = ? WHERE id_room = ?`,
-      [room_number, type, capacity, price_per_night, description || null, status, id]
+    const result = await db.query(
+      `UPDATE room
+       SET room_number = $1, type = $2, capacity = $3, price_per_night = $4,
+           description = $5, status = $6
+       WHERE id_room = $7`,
+      [room_number, type, parseInt(capacity), parseFloat(price_per_night), description || null, status, id]
     );
-    if (result.affectedRows === 0) {
+
+    if (result.rowCount === 0) {
       return res.status(404).json({ message: 'Habitación no encontrada' });
     }
-    return res.status(200).json({ message: 'Habitación actualizada' });
+
+    return res.status(200).json({ message: 'Habitación actualizada', id_room: Number(id) });
+
   } catch (err) {
     console.error('room update error:', err);
     return res.status(500).json({ message: 'Error interno del servidor' });
   }
 };
 
-// DELETE /api/rooms/:id  [admin]
+// DELETE /api/rooms/:id
 const remove = async (req, res) => {
   const { id } = req.params;
+
   try {
-    const [result] = await db.query('DELETE FROM room WHERE id_room = ?', [id]);
-    if (result.affectedRows === 0) {
+    const result = await db.query(
+      'DELETE FROM room WHERE id_room = $1',
+      [id]
+    );
+
+    if (result.rowCount === 0) {
       return res.status(404).json({ message: 'Habitación no encontrada' });
     }
+
     return res.status(200).json({ message: 'Habitación eliminada' });
+
   } catch (err) {
     console.error('room remove error:', err);
     return res.status(500).json({ message: 'Error interno del servidor' });
   }
 };
 
-// GET /api/rooms/:id/availability?checkIn=YYYY-MM-DD&checkOut=YYYY-MM-DD  [public]
+// GET /api/rooms/:id/availability
 const checkAvailability = async (req, res) => {
   const { id } = req.params;
   const { checkIn, checkOut } = req.query;
@@ -112,15 +153,19 @@ const checkAvailability = async (req, res) => {
   }
 
   try {
-    const [conflicts] = await db.query(
+    const result = await db.query(
       `SELECT id_reservation FROM reservation
-       WHERE id_room = ?
+       WHERE id_room = $1
          AND reservation_status != 'cancelled'
-         AND check_in_date  < ?
-         AND check_out_date > ?`,
+         AND check_in_date  < $2
+         AND check_out_date > $3`,
       [id, checkOut, checkIn]
     );
-    return res.status(200).json({ available: conflicts.length === 0 });
+
+    return res.status(200).json({
+      available: result.rows.length === 0
+    });
+
   } catch (err) {
     console.error('checkAvailability error:', err);
     return res.status(500).json({ message: 'Error interno del servidor' });
