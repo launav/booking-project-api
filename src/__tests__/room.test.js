@@ -1,13 +1,13 @@
-process.env.JWT_SECRET     = 'test-secret';
+process.env.JWT_SECRET = 'test-secret';
 process.env.JWT_EXPIRES_IN = '1h';
 
 jest.mock('../config/db', () => ({ query: jest.fn() }));
-const db      = require('../config/db');
+const db = require('../config/db');
 const request = require('supertest');
-const jwt     = require('jsonwebtoken');
-const app     = require('../app');
+const jwt = require('jsonwebtoken');
+const app = require('../app');
 
-const adminToken  = jwt.sign({ id_user: 1, email: 'admin@test.com', role: 'admin' },  'test-secret');
+const adminToken = jwt.sign({ id_user: 1, email: 'admin@test.com', role: 'admin' }, 'test-secret');
 const clientToken = jwt.sign({ id_user: 2, email: 'client@test.com', role: 'client' }, 'test-secret');
 
 const fakeRoom = {
