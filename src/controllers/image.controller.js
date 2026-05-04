@@ -55,7 +55,7 @@ const uploadHotelImage = async (req, res) => {
     });
 
   } catch (err) {
-    if (req.file && req.file.path) fs.unlink(req.file.path, () => {});
+    if (req.file && req.file.path) fs.unlink(req.file.path, () => { });
     console.error('image uploadHotelImage error:', err);
     return res.status(500).json({ message: 'Error interno del servidor' });
   }
@@ -84,7 +84,7 @@ const uploadRoomImage = async (req, res) => {
     });
 
   } catch (err) {
-    if (req.file && req.file.path) fs.unlink(req.file.path, () => {});
+    if (req.file && req.file.path) fs.unlink(req.file.path, () => { });
     console.error('image uploadRoomImage error:', err);
     return res.status(500).json({ message: 'Error interno del servidor' });
   }

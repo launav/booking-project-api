@@ -4,7 +4,7 @@
 -- ============================================================
 
 
--- ── 0. Limpieza (para re-ejecución segura) ───────────────────
+-- 0. Limpieza (para re-ejecución segura)
 DROP TABLE IF EXISTS image        CASCADE;
 DROP TABLE IF EXISTS reservation  CASCADE;
 DROP TABLE IF EXISTS room         CASCADE;
@@ -12,9 +12,8 @@ DROP TABLE IF EXISTS hotel        CASCADE;
 DROP TABLE IF EXISTS "user"       CASCADE;
 
 
--- ── 1. Tabla "user" ──────────────────────────────────────────
+-- 1. Tabla "user"
 --  NOTA: "user" va entre comillas porque es palabra reservada en PostgreSQL.
---  Todos los controladores ya lo hacen así.
 CREATE TABLE "user" (
   id_user     SERIAL PRIMARY KEY,
   first_name  VARCHAR(100)  NOT NULL,
@@ -29,7 +28,7 @@ CREATE TABLE "user" (
 );
 
 
--- ── 2. Tabla hotel ───────────────────────────────────────────
+-- 2. Tabla hotel
 CREATE TABLE hotel (
   id_hotel    SERIAL PRIMARY KEY,
   name        VARCHAR(255)  NOT NULL,
@@ -42,7 +41,7 @@ CREATE TABLE hotel (
 );
 
 
--- ── 3. Tabla room ────────────────────────────────────────────
+--  3. Tabla room
 CREATE TABLE room (
   id_room          SERIAL PRIMARY KEY,
   id_hotel         INTEGER        NOT NULL REFERENCES hotel(id_hotel) ON DELETE CASCADE,
@@ -57,7 +56,7 @@ CREATE TABLE room (
 );
 
 
--- ── 4. Tabla reservation ─────────────────────────────────────
+--  4. Tabla reservation 
 CREATE TABLE reservation (
   id_reservation      SERIAL PRIMARY KEY,
   id_user             INTEGER      NOT NULL REFERENCES "user"(id_user) ON DELETE CASCADE,
@@ -72,7 +71,7 @@ CREATE TABLE reservation (
 );
 
 
--- ── 5. Tabla image ───────────────────────────────────────────
+--  5. Tabla image 
 CREATE TABLE image (
   id_image   SERIAL PRIMARY KEY,
   id_hotel   INTEGER  REFERENCES hotel(id_hotel) ON DELETE CASCADE,
@@ -82,7 +81,7 @@ CREATE TABLE image (
 );
 
 
--- ── Índices ──────────────────────────────────────────────────
+--  Índices 
 CREATE INDEX idx_room_hotel        ON room(id_hotel);
 CREATE INDEX idx_reservation_user  ON reservation(id_user);
 CREATE INDEX idx_reservation_room  ON reservation(id_room);
@@ -95,7 +94,7 @@ CREATE INDEX idx_image_room        ON image(id_room);
 --  DATOS DE PRUEBA
 -- ============================================================
 
--- ── Usuario admin ────────────────────────────────────────────
+--  Usuario admin 
 --  Contraseña por defecto: Admin1234!
 --  Genera el hash ANTES de insertar con:
 --    node -e "const b=require('bcrypt'); b.hash('Admin1234!',10).then(h=>console.log(h))"
@@ -104,7 +103,7 @@ INSERT INTO "user" (first_name, last_name, email, password, role) VALUES
 ('Admin', 'Roomify', 'admin@roomify.com',
  '$2b$10$SUSTITUYE_ESTE_VALOR_POR_EL_HASH_GENERADO', 'admin');
 
--- ── Hoteles ──────────────────────────────────────────────────
+--  Hoteles 
 INSERT INTO hotel (name, address, city, phone, email, description) VALUES
 ('Hotel Gran Vía',
  'Gran Vía 45', 'Madrid',
@@ -122,7 +121,7 @@ INSERT INTO hotel (name, address, city, phone, email, description) VALUES
  'A 5 minutos del Puerto de Valencia, ideal para descubrir la Comunidad Valenciana.');
 
 
--- ── Habitaciones — Hotel Gran Vía (id_hotel = 1) ─────────────
+--  Habitaciones — Hotel Gran Vía (id_hotel = 1) ─
 INSERT INTO room (id_hotel, room_number, type, capacity, price_per_night, description, status) VALUES
 (1, '101', 'individual', 1,  79.00,
  'Habitación individual con vistas al interior, cama de 90 cm y baño privado.', 'available'),
@@ -140,7 +139,7 @@ INSERT INTO room (id_hotel, room_number, type, capacity, price_per_night, descri
  'Habitación familiar con dos camas dobles, ideal para grupos de hasta 4 personas.', 'available');
 
 
--- ── Habitaciones — Hotel Barceloneta (id_hotel = 2) ──────────
+--  Habitaciones — Hotel Barceloneta (id_hotel = 2) 
 INSERT INTO room (id_hotel, room_number, type, capacity, price_per_night, description, status) VALUES
 (2, '101', 'individual', 1,  89.00,
  'Habitación individual con vistas al jardín y acceso a la terraza común.', 'available'),
@@ -158,7 +157,7 @@ INSERT INTO room (id_hotel, room_number, type, capacity, price_per_night, descri
  'Doble estándar con terraza y vista parcial al mar.', 'available');
 
 
--- ── Habitaciones — Hotel Valencia Sol (id_hotel = 3) ─────────
+--  Habitaciones — Hotel Valencia Sol (id_hotel = 3) ─
 INSERT INTO room (id_hotel, room_number, type, capacity, price_per_night, description, status) VALUES
 (3, '101', 'individual', 1,  65.00,
  'Individual económica, perfecta para viajes de trabajo.', 'available'),
@@ -176,7 +175,7 @@ INSERT INTO room (id_hotel, room_number, type, capacity, price_per_night, descri
  'Habitación familiar amplia con cuna disponible bajo petición.', 'available');
 
 
--- ── Imágenes de hoteles ──────────────────────────────────────
+--  Imágenes de hoteles 
 --  Sustituye estas URLs por las tuyas propias en producción.
 INSERT INTO image (id_hotel, id_room, url) VALUES
 (1, NULL, 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200'),
