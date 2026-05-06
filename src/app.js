@@ -11,7 +11,9 @@ const app = express();
 // Cors
 const allowedOrigins = [
   'http://localhost:4200',
-  'https://booking-project-taupe.vercel.app'
+  'http://localhost:3000',
+  'https://booking-project-taupe.vercel.app',
+  'https://booking-project-api.onrender.com',
 ];
 
 // Middlewares globales
