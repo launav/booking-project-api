@@ -38,6 +38,45 @@ describe('GET /api/rooms', () => {
   });
 });
 
+describe('GET /api/rooms/search', () => {
+  beforeEach(() => jest.clearAllMocks());
+
+  test('200 - devuelve resultados filtrados por capacidad', async () => {
+    db.query
+      .mockResolvedValueOnce({ rows: [{ total: 1 }] })
+      .mockResolvedValueOnce({ rows: [{ ...fakeRoom, hotel_name: 'Hotel Sol', hotel_city: 'Madrid' }] });
+
+    const res = await request(app).get('/api/rooms/search?capacity=2');
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveProperty('data');
+    expect(res.body).toHaveProperty('pagination');
+  });
+
+  test('200 - devuelve resultados filtrados por ciudad y fechas', async () => {
+    db.query
+      .mockResolvedValueOnce({ rows: [{ total: 1 }] })
+      .mockResolvedValueOnce({ rows: [{ ...fakeRoom, hotel_name: 'Hotel Sol', hotel_city: 'Madrid' }] });
+
+    const res = await request(app)
+      .get('/api/rooms/search?city=Madrid&checkIn=2025-08-01&checkOut=2025-08-05');
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.data.length).toBe(1);
+  });
+
+  test('200 - devuelve lista vacía si no hay resultados', async () => {
+    db.query
+      .mockResolvedValueOnce({ rows: [{ total: 0 }] })
+      .mockResolvedValueOnce({ rows: [] });
+
+    const res = await request(app).get('/api/rooms/search?capacity=10');
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.data).toHaveLength(0);
+  });
+});
+
 describe('GET /api/rooms/:id', () => {
   beforeEach(() => jest.clearAllMocks());
 

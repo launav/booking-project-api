@@ -75,6 +75,7 @@ router.get('/', ctrl.getAll);
  *       400:
  *         description: Faltan parámetros checkIn o checkOut
  */
+router.get('/search', ctrl.search);
 router.get('/:id/availability', ctrl.checkAvailability);
 
 /**

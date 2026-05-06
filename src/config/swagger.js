@@ -8,7 +8,10 @@ const options = {
             version: '1.0.0',
             description: 'API REST para gestión de reservas hoteleras',
         },
-        servers: [{ url: 'http://localhost:3000' }],
+        servers: [
+            { url: 'https://booking-project-api.onrender.com', description: 'Producción' },
+            { url: 'http://localhost:3000', description: 'Local' },
+        ],
         components: {
             securitySchemes: {
                 bearerAuth: {
