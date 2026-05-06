@@ -172,4 +172,70 @@ const checkAvailability = async (req, res) => {
   }
 };
 
-module.exports = { getAll, getById, create, update, remove, checkAvailability };
+// GET /api/rooms/search?city=...&checkIn=...&checkOut=...&capacity=...&page=...&limit=...
+const search = async (req, res) => {
+  const { city, checkIn, checkOut } = req.query;
+  const capacity = req.query.capacity ? parseInt(req.query.capacity) : null;
+  const page  = Math.max(1, parseInt(req.query.page)  || 1);
+  const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 10));
+  const offset = (page - 1) * limit;
+
+  try {
+    const conditions = ['1=1'];
+    const params = [];
+
+    if (city) {
+      params.push(`%${city}%`);
+      conditions.push(`h.city ILIKE $${params.length}`);
+    }
+
+    if (capacity) {
+      params.push(capacity);
+      conditions.push(`r.capacity >= $${params.length}`);
+    }
+
+    if (checkIn && checkOut) {
+      params.push(checkIn);
+      params.push(checkOut);
+      conditions.push(`NOT EXISTS (
+        SELECT 1 FROM reservation res
+        WHERE res.id_room = r.id_room
+          AND res.reservation_status != 'cancelled'
+          AND res.check_in_date  < $${params.length}
+          AND res.check_out_date > $${params.length - 1}
+      )`);
+    }
+
+    const where = conditions.join(' AND ');
+
+    const countResult = await db.query(
+      `SELECT COUNT(*)::int AS total
+       FROM room r
+       JOIN hotel h ON r.id_hotel = h.id_hotel
+       WHERE ${where}`,
+      params
+    );
+    const total = countResult.rows[0].total;
+
+    const result = await db.query(
+      `SELECT r.*, h.name AS hotel_name, h.city AS hotel_city
+       FROM room r
+       JOIN hotel h ON r.id_hotel = h.id_hotel
+       WHERE ${where}
+       ORDER BY r.id_room ASC
+       LIMIT $${params.length + 1} OFFSET $${params.length + 2}`,
+      [...params, limit, offset]
+    );
+
+    return res.status(200).json({
+      data: result.rows,
+      pagination: { total, page, limit, totalPages: Math.ceil(total / limit) },
+    });
+
+  } catch (err) {
+    console.error('room search error:', err);
+    return res.status(500).json({ message: 'Error interno del servidor' });
+  }
+};
+
+module.exports = { getAll, getById, create, update, remove, checkAvailability, search };
